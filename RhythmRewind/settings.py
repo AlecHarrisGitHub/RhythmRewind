@@ -38,6 +38,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Use signed cookies for session management
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_COOKIE_HTTPONLY = True
+
 
 # Application definition
 
@@ -54,6 +58,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.spotify',
+
 ]
 
 AUTHENTICATION_BACKENDS = (
