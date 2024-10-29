@@ -45,3 +45,5 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+def delete_account(request, username):
+    User.objects.get(username=username).delete()
