@@ -16,8 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from pages import views
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
+    path('delete_account/', views.delete_account, name='delete_account'),
     path('admin/', admin.site.urls),
+    path('generate_text/', views.generate_text, name='generate_text'),
+
 ]
