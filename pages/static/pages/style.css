@@ -1,0 +1,39 @@
+body {
+    background-color: #09010e; /* Light gray background */
+    font-family: 'Knewave', sans-serif;
+    text-align: center;
+    color: #ffdf27; /* Text color */
+    font-size: large;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: 'Knewave', sans-serif; /* Apply Knewave font to h1 */
+    color: #ffdf27; /* Green color for the heading */
+    text-align: center; /* Center-align the heading */
+    font-size: 4em; /* Large font size for the heading */
+    padding-top: 40px; /* Add some padding to the top */
+}
+
+p {
+    font-family: 'Knewave', sans-serif;
+    color: #ffdf27; /* Green color for the heading */
+    text-align: center; /* Center-align the heading */
+    font-size: 1.5em; /* Large font size for the heading */
+
+}
+button {
+    background-color: #2bd1ff;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Knewave', sans-serif;
+    font-size: 1.1em;
+}
+
+button:hover {
+    background-color: #9c50e6;
+}
