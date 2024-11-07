@@ -1,0 +1,16 @@
+<!-- spin_wheel.html -->
+<h1>Spin the Wheel for a Song Suggestion!</h1>
+<button onclick="spinWheel()">Spin</button>
+<div id="song-details"></div>
+
+<script>
+  function spinWheel() {
+    // Simple spin logic for demo purposes
+    fetch("{% url 'spin_wheel' %}")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('song-details').innerText =
+          `Song: ${data.song.name} by ${data.song.artists.join(', ')}`;
+      });
+  }
+</script>

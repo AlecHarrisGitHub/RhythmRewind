@@ -1,0 +1,9 @@
+<h1>Your Spotify Summary</h1>
+<div>
+  {% for track in top_tracks %}
+    <div class="track">
+      <img src="{{ track.album.images.0.url }}" alt="{{ track.name }}">
+      <p>{{ track.name }} by {{ track.artists|join:", " }}</p>
+    </div>
+  {% endfor %}
+</div>
