@@ -1,0 +1,9 @@
+body {
+    background-color: #09010e; /* Light gray background */
+    font-family: 'Knewave', sans-serif;
+    text-align: center;
+    color: #ffdf27; /* Text color */
+    font-size: large;
+    margin: 0;
+    padding: 0;
+}
