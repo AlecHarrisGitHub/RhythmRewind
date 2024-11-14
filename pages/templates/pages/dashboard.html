@@ -1,0 +1,6 @@
+<h2>Your Top Tracks</h2>
+<ul>
+    {% for track in top_tracks %}
+        <li>{{ track.name }} by {{ track.artists|join:", " }}</li>
+    {% endfor %}
+</ul>
