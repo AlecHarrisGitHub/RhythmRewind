@@ -1,6 +1,181 @@
-<h2>Your Top Tracks</h2>
-<ul>
-    {% for track in top_tracks %}
-        <li>{{ track.name }} by {{ track.artists|join:", " }}</li>
-    {% endfor %}
-</ul>
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+        #profile-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #charts-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+        .chart-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        canvas {
+            max-width: 100%;
+            width: 350px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Welcome, {{ user_profile.display_name }}</h2>
+    <div id="profile-info">
+        {% if user_profile.profile_image %}
+            <img src="{{ user_profile.profile_image }}" alt="Profile Image" style="width: 100px; border-radius: 50%;">
+        {% endif %}
+        <p>Followers: {{ user_profile.followers }}</p>
+    </div>
+
+    <div id="charts-container">
+        <div class="chart-wrapper"><canvas id="popularityChart"></canvas></div>
+        <div class="chart-wrapper"><canvas id="topArtistsChart"></canvas></div>
+        <div class="chart-wrapper"><canvas id="recentlyPlayedChart"></canvas></div>
+        <div class="chart-wrapper"><canvas id="newMusicChart"></canvas></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var trackNames = {{ track_names|safe }};
+            var popularityScores = {{ popularity_scores|safe }};
+            var artistNames = {{ artist_names|safe }};
+            var artistFollowers = {{ artist_followers|safe }};
+            var recentlyPlayedNames = {{ recently_played_names|safe }};
+            var playCounts = {{ play_counts|safe }};
+
+            var ctx1 = document.getElementById('popularityChart').getContext('2d');
+            var popularityChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: trackNames,
+                    datasets: [{
+                        label: 'Popularity Score',
+                        data: popularityScores,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Popularity Score' }
+                        },
+                        x: { title: { display: true, text: 'Track Names' } }
+                    }
+                }
+            });
+
+            var ctx2 = document.getElementById('topArtistsChart').getContext('2d');
+            var topArtistsChart = new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: artistNames,
+                    datasets: [{
+                        label: 'Top Artists',
+                        data: artistFollowers,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+
+            var ctx3 = document.getElementById('recentlyPlayedChart').getContext('2d');
+            var recentlyPlayedChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: recentlyPlayedNames,
+                    datasets: [{
+                        label: 'Play Count',
+                        data: playCounts,
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Play Count' }
+                        },
+                        x: { title: { display: true, text: 'Track Names' } }
+                    }
+                }
+            });
+
+            var ctx4 = document.getElementById('newMusicChart').getContext('2d');
+            var newMusicChart = new Chart(ctx4, {
+                type: 'line',
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    datasets: [{
+                        label: 'New Music Discovery',
+                        data: [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Amount of New Music' }
+                        },
+                        x: { title: { display: true, text: 'Month' } }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
