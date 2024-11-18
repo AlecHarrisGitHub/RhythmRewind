@@ -5,10 +5,12 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from allauth.account.auth_backends import AuthenticationBackend
-import requests
 import os
 from django.conf import settings
 from urllib.parse import quote
+import requests
+import random
+
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
@@ -71,6 +73,66 @@ def spotify_login(request):
         f"&redirect_uri={REDIRECT_URI}&scope={quote(SCOPE)}&show_dialog=true"
     )
     return redirect(auth_url)
+
+@login_required
+def spotify_game(request):
+    # Retrieve the user's Spotify access token
+    access_token = request.session.get('spotify_access_token')
+
+    if not access_token:
+        return redirect('spotify_login')
+
+    # Fetch the user's top tracks to ensure we provide a song they haven't heard before
+    top_tracks_response = requests.get(
+        "https://api.spotify.com/v1/me/top/tracks",
+        headers={"Authorization": f"Bearer {access_token}"}
+    )
+
+    # Parse the user's top tracks to get their names
+    top_track_names = []
+    if top_tracks_response.status_code == 200:
+        top_tracks_data = top_tracks_response.json().get('items', [])
+        for track in top_tracks_data:
+            top_track_names.append(track['name'])
+
+    # Fetch new music recommendations
+    recommendations_response = requests.get(
+        "https://api.spotify.com/v1/recommendations",
+        params={"seed_genres": "pop,rock", "limit": 10},
+        headers={"Authorization": f"Bearer {access_token}"}
+    )
+
+    new_song = None
+    clue = None
+    popularity_label = "lesser-known"
+    if recommendations_response.status_code == 200:
+        recommendations_data = recommendations_response.json().get('tracks', [])
+        for track in recommendations_data:
+            if track['name'] not in top_track_names:
+                new_song = track
+                break
+
+    # If a new song was found, create a game clue
+    if new_song:
+        artist_name = new_song['artists'][0]['name']
+        popularity = new_song.get('popularity', 0)
+        popularity_label = "popular" if popularity > 70 else "lesser-known"
+
+        clue = (
+            f"Guess the artist: Their name starts with '{artist_name[0]}' "
+            f"and they are known for the song '{new_song['name'][0]}...'."
+        )
+
+    return render(request, 'pages/spotify_game.html', {
+        'clue': clue,
+        'new_song': {
+            'name': new_song['name'],
+            'artists': [artist['name'] for artist in new_song['artists']],
+            'external_url': new_song['external_urls']['spotify'],
+            'popularity_label': popularity_label
+        }
+    })
+
 
 
 @login_required
