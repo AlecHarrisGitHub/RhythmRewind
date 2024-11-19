@@ -9,6 +9,7 @@ import requests
 import os
 from django.conf import settings
 from urllib.parse import quote
+import random
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
@@ -18,8 +19,41 @@ CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
 REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI')
 SCOPE = "user-library-read user-top-read"
 
+@login_required
+def hangman_game(request):
+    if request.user.is_authenticated:
+        access_token = request.session.get('spotify_access_token')
 
+        if not access_token:
+            return redirect('spotify_login')
 
+        # Fetch user's top tracks
+        top_tracks_response = requests.get(
+            "https://api.spotify.com/v1/me/top/tracks",
+            headers={"Authorization": f"Bearer {access_token}"}
+        )
+
+        # Refresh token if necessary
+        if top_tracks_response.status_code == 401:
+            access_token = refresh_spotify_token(request.session)
+            if access_token:
+                top_tracks_response = requests.get(
+                    "https://api.spotify.com/v1/me/top/tracks",
+                    headers={"Authorization": f"Bearer {access_token}"}
+                )
+
+        top_tracks_data = top_tracks_response.json()
+        if top_tracks_response.status_code == 200 and 'items' in top_tracks_data:
+            top_tracks = [track['name'] for track in top_tracks_data['items']]
+        else:
+            top_tracks = []
+
+        # Select a random song as the phrase for the game
+        phrase = random.choice(top_tracks) if top_tracks else "No Songs Found"
+
+        return render(request, 'pages/hangman.html', {'phrase': phrase})
+
+    return redirect('/accounts/login/')
 
 def generate_text(request):
     response_text = "Error: Unable to generate text."
