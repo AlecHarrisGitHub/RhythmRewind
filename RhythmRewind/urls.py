@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from pages import views
+from django_languageselect import urls as languageselect_urls
 
 urlpatterns = [
     path('spotify-game/', views.spotify_game, name='spotify_game'),
@@ -29,4 +30,5 @@ urlpatterns = [
     path('spotify/login/', views.spotify_login, name='spotify_login'),
     path('languages/', views.idiomas_view, name='languages'),
     path("i18n/", include("django.conf.urls.i18n")),
+    path('languageselect/', include(languageselect_urls)),
 ]
