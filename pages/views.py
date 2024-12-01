@@ -10,6 +10,7 @@ from django.conf import settings
 from urllib.parse import quote
 import requests
 import random
+from django.utils.translation import gettext as _
 
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
@@ -318,3 +319,6 @@ def delete_account(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+def idiomas_view(request):
+    return render(request, 'pages/idiomas.html')

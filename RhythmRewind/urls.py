@@ -27,4 +27,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('generate_text/', views.generate_text, name='generate_text'),
     path('spotify/login/', views.spotify_login, name='spotify_login'),
+    path('languages/', views.idiomas_view, name='languages'),
+    path("i18n/", include("django.conf.urls.i18n")),
 ]
