@@ -318,3 +318,13 @@ def delete_account(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+def contact(request):
+    staff_members = [
+        {"name": "Staff Member 1", "position": "Manager", "email": "staff1@example.com"},
+        {"name": "Staff Member 2", "position": "Developer", "email": "staff2@example.com"},
+        {"name": "Staff Member 3", "position": "Designer", "email": "staff3@example.com"},
+        {"name": "Staff Member 4", "position": "Marketer", "email": "staff4@example.com"},
+        {"name": "Staff Member 5", "position": "Support", "email": "staff5@example.com"},
+    ]
+    return render(request, 'pages/contact.html', {"staff_members": staff_members})

@@ -27,4 +27,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('generate_text/', views.generate_text, name='generate_text'),
     path('spotify/login/', views.spotify_login, name='spotify_login'),
+
+    path('contact/', views.contact, name='contact'),
 ]
