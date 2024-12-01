@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        #word { font-size: 24px; letter-spacing: 5px; white-space: pre; }
+        #hangman {
+            margin: 20px auto;
+            width: 200px;
+            height: 300px;
+            position: relative;
+        }
+        .noose {
+            width: 5px;
+            height: 40px; /* Adjusted to connect properly with the head */
+            background-color: black;
+            position: absolute;
+            top: 0;
+            left: 97px;
+        }
+        .crossbar {
+            width: 150px;
+            height: 5px;
+            background-color: black;
+            position: absolute;
+            top: 0;
+            left: 50px;
+        }
+        .support {
+            width: 5px;
+            height: 300px;
+            background-color: black;
+            position: absolute;
+            top: 0;
+            left: 50px;
+        }
+        .hangman-part {
+            display: none;
+            position: absolute;
+        }
+        .head {
+            width: 50px;
+            height: 50px;
+            border: 3px solid black;
+            border-radius: 50%;
+            top: 40px; /* Positioned correctly below the noose */
+            left: 75px;
+        }
+        .body {
+            width: 5px;
+            height: 70px;
+            background-color: black;
+            top: 95px;
+            left: 97px;
+        }
+        .left-arm {
+            width: 50px;
+            height: 5px;
+            background-color: black;
+            top: 110px;
+            left: 47px;
+            transform: rotate(45deg);
+        }
+        .right-arm {
+            width: 50px;
+            height: 5px;
+            background-color: black;
+            top: 110px;
+            left: 102px;
+            transform: rotate(-45deg);
+        }
+        .left-leg {
+            width: 50px;
+            height: 5px;
+            background-color: black;
+            top: 190px;
+            left: 47px;
+            transform: rotate(-45deg);
+        }
+        .right-leg {
+            width: 50px;
+            height: 5px;
+            background-color: black;
+            top: 190px;
+            left: 102px;
+            transform: rotate(45deg);
+        }
+    </style>
+    <script>
+        // Initialize the game
+        let phrase = "{{ phrase|escapejs }}";
+        let correctGuesses = [];
+        let wrongGuesses = [];
+
+        // Automatically fill non-letter characters
+        phrase.split("").forEach(char => {
+            if (!char.match(/[a-zA-Z]/)) {
+                correctGuesses.push(char.toLowerCase());
+            }
+        });
+
+        function updateDisplay() {
+            let display = "";
+            for (let i = 0; i < phrase.length; i++) {
+                if (correctGuesses.includes(phrase[i].toLowerCase())) {
+                    display += phrase[i] + " ";
+                } else if (phrase[i] === " ") {
+                    display += "   "; // Add visible gaps for spaces
+                } else {
+                    display += "_ ";
+                }
+            }
+            document.getElementById("word").innerHTML = display.trim(); // Use innerHTML to handle formatting
+            document.getElementById("wrong").textContent = "Wrong guesses: " + wrongGuesses.join(", ");
+        }
+
+        function updateHangman() {
+            const parts = document.querySelectorAll(".hangman-part");
+            parts[wrongGuesses.length - 1].style.display = "block";
+
+            if (wrongGuesses.length === 6) {
+                alert(`You lose! The correct answer was: "${phrase}"`);
+                location.reload();
+            }
+        }
+
+        function handleGuess() {
+            const input = document.getElementById("guess").value.toLowerCase();
+            if (!input || input.length !== 1) {
+                alert("Please enter one letter at a time.");
+                return;
+            }
+            if (phrase.toLowerCase().includes(input)) {
+                correctGuesses.push(input);
+            } else {
+                if (!wrongGuesses.includes(input)) {
+                    wrongGuesses.push(input);
+                    updateHangman();
+                }
+            }
+            document.getElementById("guess").value = "";
+            updateDisplay();
+
+            // Check if the user has won
+            let allGuessed = true;
+            for (let i = 0; i < phrase.length; i++) {
+                if (
+                    phrase[i].match(/[a-zA-Z]/) && // Only check letters
+                    !correctGuesses.includes(phrase[i].toLowerCase())
+                ) {
+                    allGuessed = false;
+                    break;
+                }
+            }
+            if (allGuessed) {
+                alert("Congratulations! You guessed the song!");
+                location.reload();
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Hangman Game</h1>
+    <p>Guess the song: <span id="word"></span></p>
+    <div id="hangman">
+        <!-- Noose and support structure -->
+        <div class="noose"></div>
+        <div class="crossbar"></div>
+        <div class="support"></div>
+        <!-- Hangman body parts -->
+        <div class="hangman-part head"></div>
+        <div class="hangman-part body"></div>
+        <div class="hangman-part left-arm"></div>
+        <div class="hangman-part right-arm"></div>
+        <div class="hangman-part left-leg"></div>
+        <div class="hangman-part right-leg"></div>
+    </div>
+    <p id="wrong">Wrong guesses: </p>
+    <input id="guess" type="text" maxlength="1" autocomplete="off">
+    <button onclick="handleGuess()">Guess</button>
+    <script>
+        updateDisplay();
+    </script>
+</body>
+</html>
