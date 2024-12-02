@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Knewave&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'pages/style.css' %}">
+    <style>
+        /* Base style for Start! button */
+        .start-button {
+            transform: skewX(-20deg);
+            background-color: #27e7ff;
+            width: 500px;
+            height: 50px;
+            border: 2px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.2rem;
+            color: black;
+            transition: transform 0.3s ease; /* Smooth transition for scaling */
+        }
+
+        /* Hover effect for Start! button */
+        .start-button:hover {
+            transform: scale(1.1) skewX(-20deg); /* Scales up while retaining skew on hover */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Music -->
+    <audio autoplay loop>
+        <source src="{% static 'pages/Continue.mp3' %}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="title-container" style="position: relative; background-image: url('{% static "pages/title-background.png" %}'); background-size: cover; background-position: center; height: 100vh; width: 100%; max-width: 140vh; margin: 0 auto; display: flex; align-items: center; justify-content: center; text-align: center;">
+
+        <!-- Image positioned absolutely relative to title-container -->
+        <img src="{% static 'pages/squiggly.png' %}" alt="Decorative squiggly line" style="position: absolute; top: 20%; left: 10%; width: 200px; height: auto;">
+        
+        <!-- Centered title -->
+        <h1 style="font-size: 5rem; line-height: 1.2; padding: 0; margin: 0; position: relative; z-index: 1;">Rhythm<br> Rewind</h1>
+    
+        <!-- Parallelogram button with hover effect -->
+        <a href="#" style="text-decoration: none; position: absolute; bottom: 15%; transform: translateX(-50%); left: 50%;">
+            <div class="start-button">
+                <span>Start!</span>
+            </div>
+        </a>
+
+        <!-- Larger, scattered wormy images, positioned slightly lower and spaced out -->
+        <img src="{% static 'pages/wormy.png' %}" style="position: absolute; bottom: -10%; right: -5%; width: 180px; transform: rotate(45deg);" alt="Decorative worm">
+        <img src="{% static 'pages/wormy.png' %}" style="position: absolute; bottom: -15%; right: 5%; width: 150px; transform: rotate(-60deg);" alt="Decorative worm">
+        <img src="{% static 'pages/wormy.png' %}" style="position: absolute; bottom: -2%; right: 5%; width: 200px; transform: rotate(90deg);" alt="Decorative worm">
+        <img src="{% static 'pages/wormy.png' %}" style="position: absolute; bottom: 0%; right: -10%; width: 170px; transform: rotate(-120deg);" alt="Decorative worm">
+    </div>
+    
+
+<!-- Login Button Container -->
+<a href="{% url 'account_login' %}">
+    <div class="button-container">
+        <button>Login</button>
+    </div>
+</a>
+
+</body>
+</html>

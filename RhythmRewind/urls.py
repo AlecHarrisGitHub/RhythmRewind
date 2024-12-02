@@ -18,7 +18,10 @@ from django.contrib import admin
 from django.urls import path, include
 from pages import views
 
+
+
 urlpatterns = [
+    path('', include('pages.urls')),
     path('spotify-game/', views.spotify_game, name='spotify_game'),
     path('accounts/spotify/login/callback/', views.spotify_callback, name='spotify_callback'),
     path('accounts/', include('allauth.urls')),
