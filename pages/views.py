@@ -456,6 +456,7 @@ sp = Spotify(auth_manager=SpotifyOAuth(
 top_artists_response = sp.current_user_top_artists(limit=1)
 top_artist = top_artists_response['items'][0] if top_artists_response['items'] else None
 
+
 @login_required
 def wraps(request):
     access_token = request.session.get('spotify_access_token')
@@ -483,24 +484,76 @@ def wraps(request):
         if top_artists_data:
             top_artist = top_artists_data[0]
 
+    top_track = None
+    top_tracks_response = requests.get(
+        "https://api.spotify.com/v1/me/top/tracks",
+        headers={"Authorization": f"Bearer {access_token}"}
+    )
+    if top_tracks_response.status_code == 200:
+        top_tracks_data = top_tracks_response.json().get('items', [])
+        if top_tracks_data:
+            top_track = top_tracks_data[0]
+
+    user_profile_response = requests.get(
+        "https://api.spotify.com/v1/me",
+        headers={"Authorization": f"Bearer {access_token}"}
+    )
+    user_followers = 0
+    if user_profile_response.status_code == 200:
+        user_profile_data = user_profile_response.json()
+        user_followers = user_profile_data.get('followers', {}).get('total', 0)
+
+    summary_description = (
+        f"Top Artist: {top_artist['name']} - Genres: {', '.join(top_artist['genres'])}\n"
+        f"Top Song: {top_track['name']} by {top_track['artists'][0]['name']}\n"
+        f"Spotify Followers: {user_followers}\n"
+        "Thanks for exploring your rhythm rewind!"
+        if top_artist and top_track else "No data available for summary."
+    )
+
     # Prepare summaries for carousel slides
     summaries = [
         {
             "title": "Welcome to Your Latest Rhythm Rewind!",
-            "description": "Continue to get your rewind!",
+            "description": " ",
             "image_url": "https://via.placeholder.com/800x300/ff80bf/000000?text=Continue+to+get+your+rewind!",
         },
         {
             "title": f"Top Artist: {top_artist['name']}" if top_artist else "Top Artist: Unknown",
             "description": f"Genre: {', '.join(top_artist['genres'])}" if top_artist else "No artist data found.",
-            "image_url": top_artist['images'][0]['url'] if top_artist and top_artist['images'] else "https://via.placeholder.com/800x300?text=No+Image",
+            "image_url": top_artist['images'][0]['url'] if top_artist and top_artist['images'] else "https://via.placeholder.com/800x300/0000ff/ffffff?text=No+Top+Artist",
         },
         {
-            "title": "Now take a look at your top song",
+            "title": "Here was your favorite...",
             "description": "",
             "image_url": "https://via.placeholder.com/800x300/ff80bf/000000?text=This+next+song+has+been+your+anthem!",
         },
-        # Add additional slides as needed...
+        {
+            "title": f"Top Song: {top_track['name']}" if top_track else "Top Song: Unknown",
+            "description": f"Artist: {top_track['artists'][0]['name']}" if top_track else "No song data found.",
+            "image_url": top_track['album']['images'][0]['url'] if top_track and top_track['album'][
+                'images'] else "https://via.placeholder.com/800x300/0000ff/ffffff?text=No+Top+Song",
+        },
+        {
+            "title": "Follow Count?",
+            "description": "",
+            "image_url": "https://via.placeholder.com/800x300/ff80bf/000000?text=Let's+take+a+look+at+your+followers...",
+        },
+        {
+            "title": "Your Number of Followers",
+            "description": f"You have {user_followers} followers on Spotify!",
+            "image_url": "https://via.placeholder.com/800x300/0000ff/ffffff?text=Your+Spotify+Followers",
+        },
+        {
+            "title": "Let's see it all!",
+            "description": "",
+            "image_url": "https://via.placeholder.com/800x300/ff80bf/000000?text=Here's+a+summary+of+your+rewind!",
+        },
+        {
+            "title": " ",
+            "description": summary_description,
+            "image_url": "https://via.placeholder.com/800x300/0000ff/ffffff?text=Summary+of+Your+Rewind!",
+        }
     ]
 
     return render(request, 'pages/wraps.html', {"summaries": summaries})

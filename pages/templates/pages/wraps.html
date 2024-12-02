@@ -6,37 +6,132 @@
     <title>View Your Wraps</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet"> <!-- Add Courier Prime font -->
     <style>
+        /* General Body Styling with Purple Background */
         body {
-            background-color: black;
+            background-color: #5e00ab; /* Set purple background */
+            font-family: Arial, sans-serif;
             color: white;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            position: relative; /* Allow absolute positioning of images */
+            /* Grid background */
+            background-image: 
+                linear-gradient(90deg, #330066 2px, transparent 1px), /* vertical lines */
+                linear-gradient(#330066 2px, transparent 1px); /* horizontal lines */
+            background-size: 80px 80px; /* Larger squares */
         }
+
+        /* Add images in front of the grid using absolute positioning */
+        .background-images {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Ensure that these images don't interfere with interactions */
+            z-index: 1; /* Place images above the grid but below the content */
+        }
+
+        .background-images img {
+            position: absolute;
+            width: 120px;  /* Increase the size of the images */
+            height: 120px;
+            z-index: 2; /* Place images above grid */
+            transform-origin: center;
+        }
+
+        /* Wormy images positioned towards bottom left */
+        .background-images img.wormy1 {
+            left: 5%;
+            bottom: 5%;
+            transform: rotate(15deg);
+        }
+
+        .background-images img.wormy2 {
+            left: 10%;
+            bottom: 3%;
+            transform: rotate(-25deg);
+        }
+
+        .background-images img.wormy3 {
+            left: 3%;
+            bottom: 12%;
+            transform: rotate(45deg);
+        }
+
+        /* One wormy image at bottom right */
+        .background-images img.wormy4 {
+            right: 5%;
+            bottom: 5%;
+            transform: rotate(-45deg);
+        }
+
+        /* Squiggly images positioned towards bottom right */
+        .background-images img.squiggly1 {
+            right: 8%;
+            bottom: 5%;
+            transform: rotate(-45deg);
+        }
+
+        .background-images img.squiggly2 {
+            right: 12%;
+            bottom: 3%;
+            transform: rotate(30deg);
+        }
+
+        /* Header Styling */
         header {
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 2rem;
+            margin-bottom: 30px;
+            font-family: 'Courier Prime', monospace; /* Use Courier Prime font */
+            font-size: 4rem;
+            color: #27e7ff; /* Cyan color */
+            z-index: 2; /* Place header above images and grid */
         }
+
         .carousel-inner {
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
         }
+
+        /* Make the carousel bigger */
         .carousel-item img {
-            max-height: 300px;
+            max-height: 500px; /* Increase image size */
             object-fit: cover;
             width: 100%;
         }
+
+        /* Adjust the carousel container size */
+        #summaryCarousel {
+            max-width: 1000px; /* Increase width */
+            max-height: 600px; /* Increase height */
+            position: relative;
+            /* Zig-zag border */
+            border: 20px solid transparent; /* Make room for border */
+            border-image: 
+                url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22%3E%3Cpath d=%22M0 16L16 0L32 16L16 32z%22 fill=%22black%22/%3E%3C/svg%3E') 
+                20 round; /* Use a zig-zag pattern */
+            transition: transform 0.3s ease; /* Smooth transition for scaling */
+        }
+
+        /* Hover effect for carousel */
+        #summaryCarousel:hover {
+            transform: scale(1.1); /* Increase the size when hovered */
+        }
+
         .carousel-caption {
             background: rgba(0, 0, 0, 0.6);
             border-radius: 10px;
-            padding: 10px;
+            padding: 15px;
+            font-size: 1.5rem; /* Increase font size */
         }
+
         .custom-caption {
             background: rgba(255, 128, 191, 0.8); /* 80's theme color */
             color: black;
@@ -47,13 +142,28 @@
     </style>
 </head>
 <body>
+    <!-- Images placed in front of the grid around the page edges -->
+    <div class="background-images">
+        <!-- 3 wormy images at the bottom left -->
+        <img src="/static/pages/wormy.png" class="wormy1" alt="Wormy">
+        <img src="/static/pages/wormy.png" class="wormy2" alt="Wormy">
+        <img src="/static/pages/wormy.png" class="wormy3" alt="Wormy">
+        
+        <!-- 1 wormy image at the bottom right -->
+        <img src="/static/pages/wormy.png" class="wormy4" alt="Wormy">
+        
+        <!-- 2 squiggly images positioned on the right -->
+        <img src="/static/pages/squiggly.png" class="squiggly1" alt="Squiggly">
+        <img src="/static/pages/squiggly.png" class="squiggly2" alt="Squiggly">
+    </div>
+
     <div class="text-center">
         <header>
             View Your Wraps!
         </header>
         <main class="container">
             <!-- Carousel -->
-            <div id="summaryCarousel" class="carousel slide mx-auto" data-bs-ride="carousel" style="max-width: 800px;">
+            <div id="summaryCarousel" class="carousel slide mx-auto" data-bs-ride="carousel" style="max-width: 1000px; max-height: 600px;">
                 <div class="carousel-inner">
                     {% for summary in summaries %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
@@ -82,4 +192,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
 
