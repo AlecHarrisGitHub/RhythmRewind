@@ -216,7 +216,6 @@ def spotify_game(request):
 
 
 
-@login_required
 def dashboard(request):
     if request.user.is_authenticated:
         access_token = request.session.get('spotify_access_token')
