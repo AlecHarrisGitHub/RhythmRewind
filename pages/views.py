@@ -57,7 +57,7 @@ def hangman_game(request):
 
         return render(request, 'pages/hangman.html', {'phrase': phrase})
 
-    return redirect('/accounts/login/')
+    return redirect('/account/login/')
 
 
 def generate_text(request):
@@ -341,7 +341,7 @@ def dashboard(request):
             'user_profile': user_profile
         })
 
-    return redirect('/accounts/login/')
+    return redirect('/account/login/')
 
 def spotify_callback(request):
     code = request.GET.get('code')
