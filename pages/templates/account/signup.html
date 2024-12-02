@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+     <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: gray;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        header p {
+            font-size: 1.2em;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 30px auto;
+            overflow: hidden;
+        }
+
+        .login-content {
+            background-color: #fff;
+            padding: 50px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-content h2 {
+            margin-bottom: 30px;
+            font-size: 2em;
+            border-bottom: 2px solid gray;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .login-content form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-content label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .login-content input {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .login-button,
+        .spotify-button {
+            background-color: gray;
+            color: #fff;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-button:hover,
+        .spotify-button:hover {
+            background-color: darkgray;
+        }
+
+        .extra-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .extra-links a {
+            color: gray;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .extra-links a:hover {
+            color: darkgray;
+        }
+
+        .or-divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            background: #ccc;
+            height: 1px;
+            width: 40%;
+            position: absolute;
+            top: 50%;
+        }
+
+        .or-divider::before {
+            left: 0;
+        }
+
+        .or-divider::after {
+            right: 0;
+        }
+
+        .or-divider span {
+            display: inline-block;
+            background: #fff;
+            padding: 0 10px;
+            position: relative;
+            z-index: 1;
+            font-weight: bold;
+            color: gray;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Rhythm Rewind</h1>
+        <p>Join us to experience your music journey</p>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="container">
+        <div class="signup-content">
+            <h2>Sign Up</h2>
+            {% if form.errors %}
+                <p style="color: red;">Please correct the errors below.</p>
+            {% endif %}
+            <form method="post" action="{% url 'account_signup' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="signup-button">Sign Up</button>
+            </form>
+
+            <div class="extra-links">
+                <p>
+                    Already have an account? <a href="{% url 'account_login' %}">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>
