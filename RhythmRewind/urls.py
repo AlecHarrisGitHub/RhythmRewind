@@ -16,13 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from pages import views
 
 
 
 urlpatterns = [
-
     path('', include('pages.urls')),
+    path('spotify-game/', views.spotify_game, name='spotify_game'),
+    path('accounts/spotify/login/callback/', views.spotify_callback, name='spotify_callback'),
     path('accounts/', include('allauth.urls')),
+    path('delete_account/', views.delete_account, name='delete_account'),
+    path('dashboard/', views.dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
-
+    path('generate_text/', views.generate_text, name='generate_text'),
+    path('spotify/login/', views.spotify_login, name='spotify_login'),
+    path('hangman/', views.hangman_game, name='hangman_game'),
 ]

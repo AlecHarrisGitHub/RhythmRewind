@@ -1,0 +1,16 @@
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% block content %}
+  <h2>Delete Account</h2>
+  <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete my account</button>
+    <a href="{% url 'spotify_login' %}">No, take me back</a>
+  </form>
+{% endblock %}
