@@ -11,7 +11,9 @@ from urllib.parse import quote
 
 import requests
 import random
-
+import json
+from datetime import datetime
+from collections import Counter
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
@@ -182,15 +184,11 @@ def dashboard(request):
 
         # Fetch Spotify data
         top_tracks_response = requests.get(
-            "https://api.spotify.com/v1/me/top/tracks",
+            "https://api.spotify.com/v1/me/top/tracks?limit=50",
             headers={"Authorization": f"Bearer {access_token}"}
         )
         top_artists_response = requests.get(
-            "https://api.spotify.com/v1/me/top/artists",
-            headers={"Authorization": f"Bearer {access_token}"}
-        )
-        recently_played_response = requests.get(
-            "https://api.spotify.com/v1/me/player/recently-played",
+            "https://api.spotify.com/v1/me/top/artists?limit=50",
             headers={"Authorization": f"Bearer {access_token}"}
         )
 
@@ -199,44 +197,82 @@ def dashboard(request):
             access_token = refresh_spotify_token(request.session)
             if access_token:
                 top_tracks_response = requests.get(
-                    "https://api.spotify.com/v1/me/top/tracks",
+                    "https://api.spotify.com/v1/me/top/tracks?limit=50",
                     headers={"Authorization": f"Bearer {access_token}"}
                 )
                 top_artists_response = requests.get(
-                    "https://api.spotify.com/v1/me/top/artists",
-                    headers={"Authorization": f"Bearer {access_token}"}
-                )
-                recently_played_response = requests.get(
-                    "https://api.spotify.com/v1/me/player/recently-played",
+                    "https://api.spotify.com/v1/me/top/artists?limit=50",
                     headers={"Authorization": f"Bearer {access_token}"}
                 )
 
         # Parse data
-        top_tracks, track_names, popularity_scores = [], [], []
-        top_artists, artist_names, artist_followers = [], [], []
-        recently_played_names, play_counts = [], []
+        track_names, popularity_scores = [], []
+        artist_names, artist_followers = [], []
+        listening_time_data = [0] * 7  # Initialize list for 7 days of the week
+        genre_list = []
+        release_years = []
+        valence_list = []
+        energy_list = []
+        scatter_track_names = []
 
         if top_tracks_response.status_code == 200:
             top_tracks_data = top_tracks_response.json().get('items', [])
+            track_ids = []
             for track in top_tracks_data:
                 track_names.append(track['name'])
                 popularity_scores.append(track['popularity'])
+                track_ids.append(track['id'])
+                # Get release date of the track's album
+                album_release_date = track['album']['release_date']
+                if album_release_date:
+                    release_year = int(album_release_date.split('-')[0])
+                    release_years.append(release_year)
+
+            # Fetch audio features for top tracks
+            if track_ids:
+                ids_param = ','.join(track_ids)
+                audio_features_response = requests.get(
+                    "https://api.spotify.com/v1/audio-features",
+                    params={'ids': ids_param},
+                    headers={"Authorization": f"Bearer {access_token}"}
+                )
+                if audio_features_response.status_code == 200:
+                    audio_features_data = audio_features_response.json().get('audio_features', [])
+                    for i, af in enumerate(audio_features_data):
+                        if af:
+                            valence_list.append(af.get('valence', 0))
+                            energy_list.append(af.get('energy', 0))
+                            scatter_track_names.append(track_names[i])
+
+        # Prepare data for the Valence vs. Energy Scatter Plot
+        scatter_data = []
+        for i in range(len(scatter_track_names)):
+            scatter_data.append({
+                'x': valence_list[i],
+                'y': energy_list[i],
+                'label': scatter_track_names[i]
+            })
+
+        # Prepare data for release years chart
+        year_counts = Counter(release_years)
+        years = sorted(year_counts.keys())
+        year_frequencies = [year_counts[year] for year in years]
 
         if top_artists_response.status_code == 200:
             top_artists_data = top_artists_response.json().get('items', [])
             for artist in top_artists_data:
                 artist_names.append(artist['name'])
                 artist_followers.append(artist['followers']['total'])
+                genre_list.extend(artist['genres'])
 
-        if recently_played_response.status_code == 200:
-            recently_played_data = recently_played_response.json().get('items', [])
-            track_count = {}
-            for item in recently_played_data:
-                track_name = item['track']['name']
-                track_count[track_name] = track_count.get(track_name, 0) + 1
+        # Prepare data for genres chart
+        genre_counts = Counter(genre_list)
+        most_common_genres = genre_counts.most_common(5)
+        genre_labels = [genre for genre, count in most_common_genres]
+        genre_values = [count for genre, count in most_common_genres]
 
-            recently_played_names = list(track_count.keys())
-            play_counts = list(track_count.values())
+        # Round the listening_time_data without json.dumps
+        listening_time_data = [round(hour, 2) for hour in listening_time_data]
 
         profile_response = requests.get(
             "https://api.spotify.com/v1/me",
@@ -252,17 +288,20 @@ def dashboard(request):
             }
 
         return render(request, 'pages/dashboard.html', {
-            'track_names': track_names,
-            'popularity_scores': popularity_scores,
-            'artist_names': artist_names,
-            'artist_followers': artist_followers,
-            'recently_played_names': recently_played_names,
-            'play_counts': play_counts,
+            'track_names': json.dumps(track_names),
+            'popularity_scores': json.dumps(popularity_scores),
+            'artist_names': json.dumps(artist_names),
+            'artist_followers': json.dumps(artist_followers),
+            'listening_time_data': listening_time_data,  # Pass as a list
+            'genre_labels': json.dumps(genre_labels),
+            'genre_values': json.dumps(genre_values),
+            'scatter_data': json.dumps(scatter_data),
+            'years': json.dumps(years),
+            'year_frequencies': json.dumps(year_frequencies),
             'user_profile': user_profile
         })
 
     return redirect('/accounts/login/')
-
 
 def spotify_callback(request):
     code = request.GET.get('code')
