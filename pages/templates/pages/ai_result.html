@@ -1,2 +1,149 @@
-<p>Generated Text:</p>
-<p>{{ response }}</p>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generated Text</title>
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: gray;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        header p {
+            font-size: 1.2em;
+        }
+
+        .container {
+            width: 80%;
+            margin: 30px auto;
+            overflow: hidden;
+        }
+
+        .generated-text {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .generated-text h2 {
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 2px solid gray;
+            padding-bottom: 10px;
+        }
+
+        .generated-text p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;              /* Add Flexbox */
+            justify-content: center;    /* Center items horizontally */
+            gap: 10px;                  /* Space between buttons */
+        }
+
+        /* Updated CSS to include buttons */
+        .buttons a,
+        .buttons button {
+            display: inline-block;
+            text-decoration: none;
+            background-color: gray;
+            color: #fff;
+            padding: 12px 25px;
+            margin: 5px;
+            border: none; /* Remove default button border */
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 200px;               /* Set equal width */
+            text-align: center;         /* Center text */
+        }
+
+        .buttons a:hover,
+        .buttons button:hover {
+            background-color: darkgray;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>AI Text Generator</h1>
+        <p>Discover insights inspired by your Spotify listening habits</p>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="container">
+        <div class="generated-text">
+            <h2>Your Generated Text:</h2>
+            <p id="generated-text">{{ response }}</p>
+            <div class="buttons">
+                <!-- Regenerate button -->
+                <button id="generate-button">Generate New Text</button>
+                <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript to handle AJAX -->
+    <script>
+        $(document).ready(function() {
+            $('#generate-button').click(function() {
+                $.ajax({
+                    url: "{% url 'generate_text' %}",
+                    type: "GET",
+                    dataType: "json",
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(data) {
+                        $('#generated-text').text(data.response_text);
+                    },
+                    error: function(xhr, status, error) {
+                        alert('An error occurred while generating the text.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
