@@ -143,7 +143,7 @@ def generate_text(request):
         return render(request, 'pages/ai_result.html', {'response': response_text})
 
     else:
-        return redirect('login')
+        return redirect('account/login')
 
 
 
@@ -341,8 +341,7 @@ def dashboard(request):
             'year_frequencies': json.dumps(year_frequencies),
             'user_profile': user_profile
         })
-
-    return redirect('/account/login/')
+    return redirect('account_login')
 
 def spotify_callback(request):
     code = request.GET.get('code')
@@ -422,13 +421,12 @@ def refresh_spotify_token(session):
     return None
 
 
-@login_required
 def delete_account(request):
     if request.method == "POST":
         user = request.user
         user.delete()
         messages.success(request, "Your account has been deleted successfully.")
-        return redirect('login')
+        return redirect('account_login')
     return render(request, 'pages/delete_account.html')
 
 
