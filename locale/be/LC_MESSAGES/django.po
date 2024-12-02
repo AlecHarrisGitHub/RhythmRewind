@@ -1,0 +1,389 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-01 21:56-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: .\RhythmRewind\settings.py:128
+msgid "Afrikaans"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:129
+msgid "Arabic"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:130
+msgid "Asturian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:131
+msgid "Azerbaijani"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:132
+msgid "Bulgarian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:133
+msgid "Belarusian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:134
+msgid "Bengali"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:135
+msgid "Breton"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:136
+msgid "Bosnian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:137
+msgid "Catalan"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:138
+msgid "Central Kurdish"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:139
+msgid "Czech"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:140
+msgid "Welsh"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:141
+msgid "Danish"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:142
+msgid "German"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:143
+msgid "Lower Sorbian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:144
+msgid "Greek"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:145
+msgid "English"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:146
+msgid "Esperanto"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:147
+msgid "Spanish"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:148
+msgid "Estonian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:149
+msgid "Basque"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:150
+msgid "Persian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:151
+msgid "Finnish"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:152
+msgid "French"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:153
+msgid "Frisian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:154
+msgid "Irish"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:155
+msgid "Scottish Gaelic"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:156
+msgid "Galician"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:157
+msgid "Hebrew"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:158
+msgid "Hindi"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:159
+msgid "Croatian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:160
+msgid "Upper Sorbian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:161
+msgid "Hungarian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:162
+msgid "Armenian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:163
+msgid "Interlingua"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:164
+msgid "Indonesian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:165
+msgid "Igbo"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:166
+msgid "Ido"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:167
+msgid "Icelandic"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:168
+msgid "Italian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:169
+msgid "Japanese"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:170
+msgid "Georgian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:171
+msgid "Kabyle"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:172
+msgid "Kazakh"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:173
+msgid "Khmer"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:174
+msgid "Kannada"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:175
+msgid "Korean"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:176
+msgid "Kyrgyz"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:177
+msgid "Luxembourgish"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:178
+msgid "Lithuanian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:179
+msgid "Latvian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:180
+msgid "Macedonian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:181
+msgid "Malayalam"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:182
+msgid "Mongolian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:183
+msgid "Marathi"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:184
+msgid "Malay"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:185
+msgid "Burmese"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:186
+msgid "Norwegian Bokmål"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:187
+msgid "Nepali"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:188
+msgid "Dutch"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:189
+msgid "Norwegian Nynorsk"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:190
+msgid "Ossetic"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:191
+msgid "Punjabi"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:192
+msgid "Polish"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:193
+msgid "Portuguese"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:194
+msgid "Romanian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:195
+msgid "Russian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:196
+msgid "Slovak"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:197
+msgid "Slovenian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:198
+msgid "Albanian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:199
+msgid "Serbian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:200
+msgid "Swedish"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:201
+msgid "Swahili"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:202
+msgid "Tamil"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:203
+msgid "Telugu"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:204
+msgid "Tajik"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:205
+msgid "Thai"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:206
+msgid "Turkmen"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:207
+msgid "Turkish"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:208
+msgid "Tatar"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:209
+msgid "Udmurt"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:210
+msgid "Uyghur"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:211
+msgid "Ukrainian"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:212
+msgid "Urdu"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:213
+msgid "Uzbek"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:214
+msgid "Vietnamese"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:215
+msgid "Simplified Chinese"
+msgstr ""
+
+#: .\RhythmRewind\settings.py:216
+msgid "Traditional Chinese"
+msgstr ""
+
+#: .\pages\templates\pages\idiomas.html:18
+msgid "Hello"
+msgstr ""
+
+#: .\pages\templates\pages\idiomas.html:19
+msgid ""
+"\n"
+"Apples,\n"
+"bananas,\n"
+"mangoes\n"
+msgstr ""

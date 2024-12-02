@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.spotify',
+    'autotranslate',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -58,6 +59,9 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
+
+AUTOTRANSLATE_TRANSLATER_SERVICE = 'autotranslate.services.GOogleAPITranslatorService'
+GOOGLE_TRANSLATE_KEY = 'AIzaSyAj9lvwGKp91TlQTSt1LLVFuxDfDNZCbjc'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -127,7 +131,6 @@ LANGUAGE_CODE = 'en-US'
 LANGUAGES = (
     ('af', _('Afrikaans')),
     ('ar', _('Arabic')),
-    ('ar-dz', _('Algerian Arabic')),
     ('ast', _('Asturian')),
     ('az', _('Azerbaijani')),
     ('bg', _('Bulgarian')),
@@ -144,15 +147,8 @@ LANGUAGES = (
     ('dsb', _('Lower Sorbian')),
     ('el', _('Greek')),
     ('en', _('English')),
-    ('en-au', _('Australian English')),
-    ('en-gb', _('British English')),
     ('eo', _('Esperanto')),
     ('es', _('Spanish')),
-    ('es-ar', _('Argentinian Spanish')),
-    ('es-co', _('Colombian Spanish')),
-    ('es-mx', _('Mexican Spanish')),
-    ('es-ni', _('Nicaraguan Spanish')),
-    ('es-ve', _('Venezuelan Spanish')),
     ('et', _('Estonian')),
     ('eu', _('Basque')),
     ('fa', _('Persian')),
@@ -199,14 +195,12 @@ LANGUAGES = (
     ('pa', _('Punjabi')),
     ('pl', _('Polish')),
     ('pt', _('Portuguese')),
-    ('pt-br', _('Brazilian Portuguese')),
     ('ro', _('Romanian')),
     ('ru', _('Russian')),
     ('sk', _('Slovak')),
     ('sl', _('Slovenian')),
     ('sq', _('Albanian')),
     ('sr', _('Serbian')),
-    ('sr-latn', _('Serbian Latin')),
     ('sv', _('Swedish')),
     ('sw', _('Swahili')),
     ('ta', _('Tamil')),
@@ -231,6 +225,10 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, "locale/"),
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
