@@ -10,6 +10,8 @@ from django.conf import settings
 from urllib.parse import quote
 import requests
 import random
+from spotipy.oauth2 import SpotifyOAuth
+from spotipy import Spotify
 
 
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
@@ -328,3 +330,79 @@ def contact(request):
         {"name": "Staff Member 5", "position": "Support", "email": "staff5@example.com"},
     ]
     return render(request, 'pages/contact.html', {"staff_members": staff_members})
+
+sp = Spotify(auth_manager=SpotifyOAuth(
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        redirect_uri=REDIRECT_URI,
+        scope="user-top-read"
+    ))
+top_artists_response = sp.current_user_top_artists(limit=1)
+top_artist = top_artists_response['items'][0] if top_artists_response['items'] else None
+
+# def wraps(request):
+#     summaries = [
+#         {"title": " ",
+#             "description": " ",
+#             "image_url": "https://via.placeholder.com/800x300/ff80bf/000000?text=Continue to get your rewind!",},
+#         {"title": "filler", "description": " ", "image_url": "https://via.placeholder.com/800x300/ff80bf/000000?text=Putting the 'art' in artist!",},
+#         {"title": f"Top Artist: {top_artist['name']}" if top_artist else "Top Artist: Unknown",
+#             "description": f"Genre: {', '.join(top_artist['genres'])}" if top_artist else "No artist data found.",
+#             "image_url": top_artist['images'][0]['url'] if top_artist and top_artist['images'] else "https://via.placeholder.com/800x300?text=No+Image",},
+#
+#         {"title": "filler", "description": " ", "image_url": "https://via.placeholder.com/800x300/ff80bf/000000?text=This next song has been your anthem!",},
+#         {"title": "Top Song", "description": " ", "image_url": "https://via.placeholder.com/800x300?text=Summary+4"},
+#         {"title": "filler", "description": " ", "image_url": "https://via.placeholder.com/800x300/ff80bf/000000?text=Let's take a look at your follows...",},
+#         {"title": "Number of Followers", "description": "followers", "image_url": "https://via.placeholder.com/800x300?text=Summary+6"},
+#         {"title": "filler", "description": "Let's take a look at a summary of your rad tunes!", "image_url": "https://via.placeholder.com/800x300/ff80bf/000000?text=Here's a summary of all your rad tunes!",},
+#         {"title": "Summary", "description": "This is the eighth summary of your wrap!", "image_url": "https://via.placeholder.com/800x300?text=Summary+8"},
+#     ]
+#     return render(request, 'pages/wraps.html', {"summaries": summaries})
+@login_required
+def wraps(request):
+    access_token = request.session.get('spotify_access_token')
+
+    if not access_token:
+        return redirect('spotify_login')
+
+    # Fetch user's top artist
+    top_artists_response = requests.get(
+        "https://api.spotify.com/v1/me/top/artists",
+        headers={"Authorization": f"Bearer {access_token}"}
+    )
+
+    if top_artists_response.status_code == 401:
+        access_token = refresh_spotify_token(request.session)
+        if access_token:
+            top_artists_response = requests.get(
+                "https://api.spotify.com/v1/me/top/artists",
+                headers={"Authorization": f"Bearer {access_token}"}
+            )
+
+    top_artist = None
+    if top_artists_response.status_code == 200:
+        top_artists_data = top_artists_response.json().get('items', [])
+        if top_artists_data:
+            top_artist = top_artists_data[0]
+
+    # Prepare summaries for carousel slides
+    summaries = [
+        {
+            "title": "Welcome to Your Latest Rhythm Rewind!",
+            "description": "Continue to get your rewind!",
+            "image_url": "https://via.placeholder.com/800x300/ff80bf/000000?text=Continue+to+get+your+rewind!",
+        },
+        {
+            "title": f"Top Artist: {top_artist['name']}" if top_artist else "Top Artist: Unknown",
+            "description": f"Genre: {', '.join(top_artist['genres'])}" if top_artist else "No artist data found.",
+            "image_url": top_artist['images'][0]['url'] if top_artist and top_artist['images'] else "https://via.placeholder.com/800x300?text=No+Image",
+        },
+        {
+            "title": "Now take a look at your top song",
+            "description": "",
+            "image_url": "https://via.placeholder.com/800x300/ff80bf/000000?text=This+next+song+has+been+your+anthem!",
+        },
+        # Add additional slides as needed...
+    ]
+
+    return render(request, 'pages/wraps.html', {"summaries": summaries})

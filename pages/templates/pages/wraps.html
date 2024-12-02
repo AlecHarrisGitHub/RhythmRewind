@@ -58,8 +58,10 @@
                     {% for summary in summaries %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
                         <img src="{{ summary.image_url }}" class="d-block w-100" alt="{{ summary.title }}">
-                        {% if forloop.first %}
-                        {% endif %}
+                        <div class="carousel-caption">
+                            <h5>{{ summary.title }}</h5>
+                            <p>{{ summary.description }}</p>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>

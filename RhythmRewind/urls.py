@@ -29,4 +29,5 @@ urlpatterns = [
     path('spotify/login/', views.spotify_login, name='spotify_login'),
 
     path('contact/', views.contact, name='contact'),
+    path('wraps/', views.wraps, name='wraps'),
 ]
