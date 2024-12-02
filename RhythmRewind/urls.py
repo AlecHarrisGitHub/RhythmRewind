@@ -23,8 +23,8 @@ from pages import views
 urlpatterns = [
     path('', include('pages.urls')),
     path('spotify-game/', views.spotify_game, name='spotify_game'),
-    path('accounts/spotify/login/callback/', views.spotify_callback, name='spotify_callback'),
-    path('accounts/', include('allauth.urls')),
+    path('account/spotify/login/callback/', views.spotify_callback, name='spotify_callback'),
+    path('account/', include('allauth.urls')),
     path('delete_account/', views.delete_account, name='delete_account'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
