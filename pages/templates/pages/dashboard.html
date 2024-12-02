@@ -25,19 +25,20 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
-            max-width: 900px;
+            max-width: 1200px;
             width: 100%;
         }
         .chart-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 10px;
         }
         canvas {
-            max-width: 100%;
-            width: 350px;
-            height: 200px;
+            width: 100% !important;
+            height: auto !important;
+        }
+        @media screen and (max-width: 768px) {
+            #charts-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -53,8 +54,8 @@
     <div id="charts-container">
         <div class="chart-wrapper"><canvas id="popularityChart"></canvas></div>
         <div class="chart-wrapper"><canvas id="topArtistsChart"></canvas></div>
-        <div class="chart-wrapper"><canvas id="recentlyPlayedChart"></canvas></div>
-        <div class="chart-wrapper"><canvas id="newMusicChart"></canvas></div>
+        <div class="chart-wrapper"><canvas id="genresChart"></canvas></div>
+        <div class="chart-wrapper"><canvas id="releaseYearsChart"></canvas></div>
     </div>
 
     <script>
@@ -63,9 +64,12 @@
             var popularityScores = {{ popularity_scores|safe }};
             var artistNames = {{ artist_names|safe }};
             var artistFollowers = {{ artist_followers|safe }};
-            var recentlyPlayedNames = {{ recently_played_names|safe }};
-            var playCounts = {{ play_counts|safe }};
+            var genreLabels = {{ genre_labels|safe }};
+            var genreValues = {{ genre_values|safe }};
+            var years = {{ years|default:"[]"|safe }};
+            var yearFrequencies = {{ year_frequencies|default:"[]"|safe }};
 
+            // ctx1 - Popularity Chart
             var ctx1 = document.getElementById('popularityChart').getContext('2d');
             var popularityChart = new Chart(ctx1, {
                 type: 'bar',
@@ -91,6 +95,7 @@
                 }
             });
 
+            // ctx2 - Top Artists Chart
             var ctx2 = document.getElementById('topArtistsChart').getContext('2d');
             var topArtistsChart = new Chart(ctx2, {
                 type: 'pie',
@@ -104,16 +109,14 @@
                             'rgba(54, 162, 235, 0.2)',
                             'rgba(255, 206, 86, 0.2)',
                             'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
+                            'rgba(153, 102, 255, 0.2)'
                         ],
                         borderColor: [
                             'rgba(255, 99, 132, 1)',
                             'rgba(54, 162, 235, 1)',
                             'rgba(255, 206, 86, 1)',
                             'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
+                            'rgba(153, 102, 255, 1)'
                         ],
                         borderWidth: 1
                     }]
@@ -126,41 +129,52 @@
                 }
             });
 
-            var ctx3 = document.getElementById('recentlyPlayedChart').getContext('2d');
-            var recentlyPlayedChart = new Chart(ctx3, {
+            // ctx3 - Genres Chart (Updated)
+            var ctx3 = document.getElementById('genresChart').getContext('2d');
+            var genresChart = new Chart(ctx3, {
                 type: 'bar',
                 data: {
-                    labels: recentlyPlayedNames,
+                    labels: genreLabels,
                     datasets: [{
-                        label: 'Play Count',
-                        data: playCounts,
+                        label: 'Top Genres',
+                        data: genreValues,
                         backgroundColor: 'rgba(153, 102, 255, 0.2)',
                         borderColor: 'rgba(153, 102, 255, 1)',
                         borderWidth: 1
                     }]
                 },
                 options: {
+                    indexAxis: 'y',  // Display horizontal bars
                     responsive: true,
                     scales: {
-                        y: {
+                        x: {
                             beginAtZero: true,
-                            title: { display: true, text: 'Play Count' }
+                            title: { display: true, text: 'Number of Artists' }
                         },
-                        x: { title: { display: true, text: 'Track Names' } }
+                        y: {
+                            title: { display: true, text: 'Genres' },
+                            ticks: {
+                                autoSkip: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
                     }
                 }
             });
 
-            var ctx4 = document.getElementById('newMusicChart').getContext('2d');
-            var newMusicChart = new Chart(ctx4, {
-                type: 'line',
+            // ctx4 - Release Years Chart (If you still want to keep it)
+            var ctx4 = document.getElementById('releaseYearsChart').getContext('2d');
+            var releaseYearsChart = new Chart(ctx4, {
+                type: 'bar',
                 data: {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    labels: years,
                     datasets: [{
-                        label: 'New Music Discovery',
-                        data: [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65],
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
+                        label: 'Number of Tracks',
+                        data: yearFrequencies,
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
                         borderWidth: 1
                     }]
                 },
@@ -169,9 +183,9 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            title: { display: true, text: 'Amount of New Music' }
+                            title: { display: true, text: 'Number of Tracks' }
                         },
-                        x: { title: { display: true, text: 'Month' } }
+                        x: { title: { display: true, text: 'Release Year' } }
                     }
                 }
             });
