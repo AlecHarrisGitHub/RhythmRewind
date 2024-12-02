@@ -61,7 +61,7 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 
 AUTOTRANSLATE_TRANSLATER_SERVICE = 'autotranslate.services.GOogleAPITranslatorService'
-GOOGLE_TRANSLATE_KEY = 'AIzaSyAj9lvwGKp91TlQTSt1LLVFuxDfDNZCbjc'
+GOOGLE_TRANSLATE_KEY = os.getenv('GOOGLE_API_KEY')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
