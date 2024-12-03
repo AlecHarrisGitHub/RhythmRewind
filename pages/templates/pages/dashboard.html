@@ -2,9 +2,73 @@
 <!DOCTYPE html>
 <html>
 <head>
+            <link rel="icon" href="/RhythmRewind.png" type="image/png">
+
     <title>Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
+    <style>/* Dropdown container */
+.dropdown {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: inline-block;
+}
+
+/* Dropdown button */
+.dropbtn {
+    background-color: #27e7ff;
+    border: 2px solid black;
+    padding: 10px 20px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 1rem;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.dropbtn:hover {
+    transform: scale(1.1);
+}
+
+/* Dropdown content */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f4f4f4;
+    min-width: 160px;
+    border: 2px solid black;
+    z-index: 1;
+    margin-top: 5px; /* Space between button and dropdown */
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Remove border from the last link */
+.dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+/* Change background on hover */
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+/* Show the dropdown on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -110,7 +174,19 @@
 </head>
 <body>
     <!-- Back to Home Button -->
-    <a href="{% url 'home' %}" class="back-button">Back to Home</a>
+
+        <!-- Dropdown Menu -->
+    <div class="dropdown">
+        <button class="dropbtn">Menu</button>
+        <div class="dropdown-content">
+            <a href="{% url 'home' %}">Back to Home</a>
+            <a href="{% url 'wraps' %}">Wraps</a>
+            <a href="{% url 'hangman_game' %}">Hangman</a>
+            <a href="{% url 'spotify_puzzle_game' %}">Quiz</a>
+        </div>
+    </div>
+
+
 
     <h2>Welcome, {{ user_profile.display_name }}</h2>
     <div id="profile-info">

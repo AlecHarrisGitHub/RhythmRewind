@@ -22,11 +22,16 @@ from pages import views
 
 urlpatterns = [
     path('', include('pages.urls')),
-    path('spotify-game/', views.spotify_game, name='spotify_game'),
+    path('spotify/puzzle/', views.spotify_puzzle_game, name='spotify_puzzle_game'),
     path('account/spotify/login/callback/', views.spotify_callback, name='spotify_callback'),
     path('account/', include('allauth.urls')),
     path('delete_account/', views.delete_account, name='delete_account'),
+    path('wraps/', views.wraps, name='wraps'),
+    path('wraps/delete/<int:wrap_id>/', views.delete_wrap, name='delete_wrap'),
+
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('logout/', views.logout_view, name='logout_view'),
+
     path('admin/', admin.site.urls),
     path('generate_text/', views.generate_text, name='generate_text'),
     path('spotify/login/', views.spotify_login, name='spotify_login'),

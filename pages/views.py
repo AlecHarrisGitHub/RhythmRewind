@@ -6,8 +6,13 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from allauth.account.auth_backends import AuthenticationBackend
 import os
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
 from django.conf import settings
 from urllib.parse import quote
+
+from .models import Wrap
 
 import requests
 import random
@@ -156,62 +161,38 @@ def spotify_login(request):
     return redirect(auth_url)
 
 @login_required
-def spotify_game(request):
-    # Retrieve the user's Spotify access token
+def spotify_puzzle_game(request):
     access_token = request.session.get('spotify_access_token')
 
     if not access_token:
         return redirect('spotify_login')
 
-    # Fetch the user's top tracks to ensure we provide a song they haven't heard before
-    top_tracks_response = requests.get(
-        "https://api.spotify.com/v1/me/top/tracks",
+    # Fetch user's top artist
+    top_artists_response = requests.get(
+        "https://api.spotify.com/v1/me/top/artists?limit=1",
         headers={"Authorization": f"Bearer {access_token}"}
     )
 
-    # Parse the user's top tracks to get their names
-    top_track_names = []
-    if top_tracks_response.status_code == 200:
-        top_tracks_data = top_tracks_response.json().get('items', [])
-        for track in top_tracks_data:
-            top_track_names.append(track['name'])
+    if top_artists_response.status_code == 401:
+        access_token = refresh_spotify_token(request.session)
+        if access_token:
+            top_artists_response = requests.get(
+                "https://api.spotify.com/v1/me/top/artists?limit=1",
+                headers={"Authorization": f"Bearer {access_token}"}
+            )
 
-    # Fetch new music recommendations
-    recommendations_response = requests.get(
-        "https://api.spotify.com/v1/recommendations",
-        params={"seed_genres": "pop,rock", "limit": 10},
-        headers={"Authorization": f"Bearer {access_token}"}
-    )
+    top_artist_data = top_artists_response.json()
+    if top_artists_response.status_code == 200 and 'items' in top_artist_data and len(top_artist_data['items']) > 0:
+        artist = top_artist_data['items'][0]
+        artist_name = artist['name']
+        artist_image_url = artist['images'][0]['url'] if artist.get('images') else None
+    else:
+        artist_name = "Unknown Artist"
+        artist_image_url = None
 
-    new_song = None
-    clue = None
-    popularity_label = "lesser-known"
-    if recommendations_response.status_code == 200:
-        recommendations_data = recommendations_response.json().get('tracks', [])
-        for track in recommendations_data:
-            if track['name'] not in top_track_names:
-                new_song = track
-                break
-
-    # If a new song was found, create a game clue
-    if new_song:
-        artist_name = new_song['artists'][0]['name']
-        popularity = new_song.get('popularity', 0)
-        popularity_label = "popular" if popularity > 70 else "lesser-known"
-
-        clue = (
-            f"Guess the artist: Their name starts with '{artist_name[0]}' "
-            f"and they are known for the song '{new_song['name'][0]}...'."
-        )
-
-    return render(request, 'pages/spotify_game.html', {
-        'clue': clue,
-        'new_song': {
-            'name': new_song['name'],
-            'artists': [artist['name'] for artist in new_song['artists']],
-            'external_url': new_song['external_urls']['spotify'],
-            'popularity_label': popularity_label
-        }
+    return render(request, 'pages/spotify_puzzle_game.html', {
+        'artist_name': artist_name,
+        'artist_image_url': artist_image_url
     })
 
 
@@ -396,6 +377,12 @@ def spotify_callback(request):
 
     return HttpResponse("Login failed", status=401)
 
+def logout_view(request):
+    if request.method == 'GET':  # Logout should work on GET requests (or POST if you prefer)
+        logout(request)
+        messages.success(request, "You have successfully logged out.")
+        return redirect('home')  # Redirect to the home page or any other page
+
 
 def refresh_spotify_token(session):
     refresh_token = session.get('spotify_refresh_token')
@@ -429,10 +416,6 @@ def delete_account(request):
         return redirect('account_login')
     return render(request, 'pages/delete_account.html')
 
-
-def logout_view(request):
-    logout(request)
-    return redirect('login')
 
 def contact(request):
     staff_members = [
@@ -528,8 +511,7 @@ def wraps(request):
         {
             "title": f"Top Song: {top_track['name']}" if top_track else "Top Song: Unknown",
             "description": f"Artist: {top_track['artists'][0]['name']}" if top_track else "No song data found.",
-            "image_url": top_track['album']['images'][0]['url'] if top_track and top_track['album'][
-                'images'] else "https://via.placeholder.com/800x300/0000ff/ffffff?text=No+Top+Song",
+            "image_url": top_track['album']['images'][0]['url'] if top_track and top_track['album']['images'] else "https://via.placeholder.com/800x300/0000ff/ffffff?text=No+Top+Song",
         },
         {
             "title": "Follow Count?",
@@ -553,9 +535,37 @@ def wraps(request):
         }
     ]
 
-    return render(request, 'pages/wraps.html', {"summaries": summaries})
-  
+    # Check if the wrap has already been saved in this session
+    if not request.session.get('wrap_saved'):
+        # Save the current wrap to the database
+        for summary in summaries:
+            Wrap.objects.create(
+                user=request.user,
+                title=summary['title'],
+                description=summary['description'],
+                image_url=summary['image_url'],
+                created_at=timezone.now()
+            )
+        # Mark wrap as saved in the session
+        request.session['wrap_saved'] = True
+
+    # Retrieve all wraps for the user, ordered by newest first
+    user_wraps = Wrap.objects.filter(user=request.user).order_by('-created_at')
+
+    return render(request, 'pages/wraps.html', {
+        "summaries": summaries,
+        "user_wraps": user_wraps
+    })
 def home(request):
     return render(request, 'pages/home.html')
 
-
+@login_required
+def delete_wrap(request, wrap_id):
+    wrap = get_object_or_404(Wrap, id=wrap_id, user=request.user)
+    if request.method == 'POST':
+        wrap.delete()
+        messages.success(request, 'Wrap deleted successfully.')
+        return redirect('wraps')
+    else:
+        messages.error(request, 'Invalid request method.')
+        return redirect('wraps')
